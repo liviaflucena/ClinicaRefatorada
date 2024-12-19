@@ -1,5 +1,6 @@
 public interface ICalculadora {
     float calcularValor();
+   
 }
 
 /**

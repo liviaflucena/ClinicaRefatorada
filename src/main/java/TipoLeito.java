@@ -1,6 +1,6 @@
 public enum TipoLeito {
-    APARTAMENTO(90),  // Valor da diária
-    ENFERMARIA(40);   // Valor da diária
+    APARTAMENTO(90),  
+    ENFERMARIA(40);   
 
     private final int valorDiaria;
 
