@@ -1,20 +1,27 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class CalculadoraProcedimento implements ICalculadora {
     private final TipoProcedimento tipo;
-  
+
+    // Mapa para associar tipo de procedimento a seu valor
+    private static final Map<TipoProcedimento, Float> valoresProcedimentos = new HashMap<>();
+
+    static {
+        // Preenche o mapa com os valores dos procedimentos
+        valoresProcedimentos.put(TipoProcedimento.BÁSICO, 50.00f);
+        valoresProcedimentos.put(TipoProcedimento.COMUM, 150.00f);
+        valoresProcedimentos.put(TipoProcedimento.AVANÇADO, 500.00f);
+    }
 
     public CalculadoraProcedimento(TipoProcedimento tipo) {
         this.tipo = tipo;
- 
     }
 
     @Override
     public float calcularValor() {
-        switch (tipo) {
-            case BÁSICO: return 50.00f;
-            case COMUM: return 150.00f;
-            case AVANÇADO: return 500.00f;
-            default: return 0.00f;
-        }
+        // Retorna o valor diretamente do mapa, caso o tipo seja encontrado
+        return valoresProcedimentos.getOrDefault(tipo, 0.00f);
     }
 }
 

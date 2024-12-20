@@ -1,7 +1,7 @@
 public enum TipoProcedimento {
-    BÁSICO(100),
+    BÁSICO(50),
     COMUM(150),
-    AVANÇADO(200);
+    AVANÇADO(500);
 
     private final int valor;
 

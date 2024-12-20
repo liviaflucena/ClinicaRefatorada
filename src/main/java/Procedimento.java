@@ -1,5 +1,5 @@
 public class Procedimento {
-    private TipoProcedimento tipoProcedimento;
+    private final TipoProcedimento tipoProcedimento;
 
     public Procedimento(TipoProcedimento tipoProcedimento) {
         this.tipoProcedimento = tipoProcedimento;

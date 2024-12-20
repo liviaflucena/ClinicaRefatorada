@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Prontuario {
 
-    private ProntuariorepositoryCSV repository;
+    private final ProntuariorepositoryCSV repository;
 
     private String nomePaciente;
     private Internacao internacao;
@@ -38,49 +38,53 @@ public class Prontuario {
     }
 
     public String imprimaConta() {
-        int valorTotalProcedimentos = procedimentos.stream().mapToInt(Procedimento::calcularValor).sum();
         int valorTotalInternacao = internacao != null ? internacao.calcularValor() : 0;
+        int valorTotalProcedimentos = procedimentos.stream().mapToInt(Procedimento::calcularValor).sum();
         int valorTotal = valorTotalProcedimentos + valorTotalInternacao;
-
+        
         StringBuilder conta = new StringBuilder();
         conta.append("----------------------------------------------------------------------------------------------\n");
-        conta.append("A conta do(a) paciente ").append(nomePaciente).append(" tem valor total de __ R$ ").append(valorTotal + ",00" ).append(" __\n\n");
+        conta.append("A conta do(a) paciente ").append(nomePaciente).append(" tem valor total de __ R$ ").append(String.format("%,.2f", (float) valorTotal)).append(" __\n\n");
         conta.append("Conforme os detalhes abaixo:\n\n");
-
+    
         if (internacao != null) {
-            conta.append("Valor Total Diárias:\t\t\tR$ ").append(valorTotalInternacao + ",00").append("\n");
+            conta.append("Valor Total Diárias:\t\t\tR$ ").append(valorTotalInternacao).append(",00").append("\n");
             conta.append("\t\t\t\t\t").append(internacao.getQtdeDias());
             if(internacao.getQtdeDias()>1)
-            conta.append(" diárias em ");
+                conta.append(" diárias em ");
             else
-            conta.append(" diária em ");
-        conta.append(internacao.getTipoLeito().equals(TipoLeito.APARTAMENTO) ? "apartamento":"enfermaria").append("\n");
+                conta.append(" diária em ");
+            conta.append(internacao.getTipoLeito().equals(TipoLeito.APARTAMENTO) ? "apartamento" : "enfermaria").append("\n");
         }
-        if(valorTotalProcedimentos!= 0)
-        conta.append("Valor Total Procedimentos:\tR$  ").append(valorTotalProcedimentos + ",00").append("\n");
-
+        
+        if (valorTotalProcedimentos != 0) {
+            conta.append("Valor Total Procedimentos:\tR$  ").append(valorTotalProcedimentos).append(",00").append("\n");
+        }
+        
+        // Loop para contar os procedimentos e exibir os detalhes
         for (TipoProcedimento tipo : TipoProcedimento.values()) {
-            String tp = tipo.toString();
             long count = procedimentos.stream().filter(p -> p.getTipoProcedimento() == tipo).count();
             if (count > 0) {
-                conta.append("\t\t\t\t").append(count).append(" procedimento").append(count > 1 ? "s" : "").append(" ");
+                // Exibe a quantidade do procedimento
+                conta.append("\t\t\t\t").append(count).append(" procedimento");
+                conta.append(count > 1 ? "s" : "").append(" ");
+                
+                // Exibe o tipo de procedimento
+                if (tipo.equals(TipoProcedimento.COMUM)) {
+                    conta.append(count > 1 ? "comuns" : "comum");
+                } else {
+                    conta.append(tipo.toString().toLowerCase());
+                }
+                conta.append("\n");
             }
-            if (count >1 && tipo.equals(TipoProcedimento.COMUM )){
-                conta.append("comuns").append("\n");  
-            }
-            else if(count == 1 && tipo.equals(TipoProcedimento.COMUM )) {
-                conta.append("comum").append("\n");
-            }
-           else {
-            conta.append(tp.toLowerCase()).append("\n");
-           }
         }
-
+    
         conta.append("\nVolte sempre, a casa é sua!\n");
         conta.append("----------------------------------------------------------------------------------------------");
-
+    
         return conta.toString();
     }
+    
 
     public static void main(String[] args) {
         // Criar um prontuário para o paciente
